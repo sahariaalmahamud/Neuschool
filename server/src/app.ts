@@ -4,6 +4,7 @@ import { env } from "./config/env.js";
 import { sendSuccess } from "./utils/response.js";
 import { notFoundMiddleware } from "./middlewares/notFound.middleware.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
+import authRoutes from "./routes/auth.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import courseRoutes from "./routes/course.routes.js";
 
@@ -29,6 +30,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 // API Feature Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/courses", courseRoutes);
 
