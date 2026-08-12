@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const sansFont = Plus_Jakarta_Sans({
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-text-primary font-sans">
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
