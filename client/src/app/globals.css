@@ -1,26 +1,237 @@
 @import "tailwindcss";
 
+/* Class-based Dark Mode Variant for Tailwind CSS v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Approved Light Theme Colors */
+  --background: #F7F5F0;
+  --surface: #FFFFFF;
+  --surface-hover: #FAF8F5;
+  --surface-subtle: #EFECE6;
+  --text-primary: #111111;
+  --text-muted: #6B6A66;
+  --border: #DEDAD2;
+  --border-hover: #C8C3B8;
+  --accent: #D96C3F;
+  --accent-hover: #C25B30;
+  --focus-ring: #D96C3F;
+
+  /* Base Radii Tokens (to prevent circular references in @theme) */
+  --neu-radius-sm: 0.25rem;
+  --neu-radius-md: 0.5rem;
+  --neu-radius-lg: 0.75rem;
+  --neu-radius-xl: 1rem;
+  --neu-radius-full: 9999px;
+
+  /* Base Light Theme Shadow Tokens */
+  --neu-shadow-sm: 0 1px 2px 0 rgba(17, 17, 17, 0.04);
+  --neu-shadow-md: 0 4px 6px -1px rgba(17, 17, 17, 0.06), 0 2px 4px -2px rgba(17, 17, 17, 0.04);
+  --neu-shadow-lg: 0 10px 15px -3px rgba(17, 17, 17, 0.08), 0 4px 6px -4px rgba(17, 17, 17, 0.04);
+
+  /* Easing and Transition Values */
+  --neu-ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 150ms var(--neu-ease-editorial);
+  --transition-normal: 250ms var(--neu-ease-editorial);
 }
 
-@theme inline {
+.dark {
+  /* Approved Dark Theme Colors */
+  --background: #0B0B0B;
+  --surface: #151515;
+  --surface-hover: #1F1F1F;
+  --surface-subtle: #1A1A1A;
+  --text-primary: #F5F3EE;
+  --text-muted: #A5A29C;
+  --border: #292929;
+  --border-hover: #3D3D3D;
+  --accent: #E47A4B;
+  --accent-hover: #ED895B;
+  --focus-ring: #E47A4B;
+
+  /* Base Dark Theme Shadow Tokens */
+  --neu-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --neu-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --neu-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+}
+
+@theme {
+  /* Tailwind CSS v4 Theme Mappings */
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-focus-ring: var(--focus-ring);
+
+  /* Alternative color aliases */
+  --color-primary: var(--text-primary);
+  --color-muted: var(--text-muted);
+
+  /* Font Mappings (referencing Next.js font variables from layout.tsx) */
+  --font-sans: var(--font-neu-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-neu-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+  /* Border Radii Mappings */
+  --radius-sm: var(--neu-radius-sm);
+  --radius-md: var(--neu-radius-md);
+  --radius-lg: var(--neu-radius-lg);
+  --radius-xl: var(--neu-radius-xl);
+  --radius-full: var(--neu-radius-full);
+
+  /* Shadow Mappings */
+  --shadow-sm: var(--neu-shadow-sm);
+  --shadow-md: var(--neu-shadow-md);
+  --shadow-lg: var(--neu-shadow-lg);
+
+  /* Transition Easing Mapping */
+  --ease-editorial: var(--neu-ease-editorial);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Base Body Setup */
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Accessibility: Selection Styles */
+::selection {
+  background-color: var(--accent);
+  color: #ffffff;
+}
+
+/* Accessibility: Keyboard Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Typography Utility Classes */
+.display,
+.text-display {
+  font-family: var(--font-neu-serif), ui-serif, Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.h1,
+.text-h1 {
+  font-family: var(--font-neu-serif), ui-serif, Georgia, serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.h2,
+.text-h2 {
+  font-family: var(--font-neu-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.h3,
+.text-h3 {
+  font-family: var(--font-neu-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.body,
+.text-body {
+  font-family: var(--font-neu-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.small,
+.text-small {
+  font-family: var(--font-neu-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.caption,
+.text-caption {
+  font-family: var(--font-neu-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Motion Keyframe Definitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Motion Utility Classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s var(--neu-ease-editorial) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s var(--neu-ease-editorial) forwards;
+}
+
+.transition-subtle {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 250ms;
+  transition-timing-function: var(--neu-ease-editorial);
+}
+
+.transition-fast {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: var(--neu-ease-editorial);
+}
+
+/* Accessibility: Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
