@@ -3,6 +3,7 @@ import FeaturedCourses from "@/components/FeaturedCourses";
 import PopularCategories from "@/components/PopularCategories";
 import WhyNeuschool from "@/components/WhyNeuschool";
 import Testimonials from "@/components/Testimonials";
+import FinalCTA from "@/components/FinalCTA";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <PopularCategories />
       <WhyNeuschool />
       <Testimonials />
+      <FinalCTA />
     </main>
   );
 }
