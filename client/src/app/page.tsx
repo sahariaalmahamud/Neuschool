@@ -2,6 +2,7 @@ import HeroSection from "@/components/HeroSection";
 import FeaturedCourses from "@/components/FeaturedCourses";
 import PopularCategories from "@/components/PopularCategories";
 import WhyNeuschool from "@/components/WhyNeuschool";
+import Testimonials from "@/components/Testimonials";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <FeaturedCourses />
       <PopularCategories />
       <WhyNeuschool />
+      <Testimonials />
     </main>
   );
 }
