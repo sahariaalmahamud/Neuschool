@@ -7,6 +7,8 @@ import { errorMiddleware } from "./middlewares/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import courseRoutes from "./routes/course.routes.js";
+import moduleRoutes from "./routes/module.routes.js";
+import lessonRoutes from "./routes/lesson.routes.js";
 
 const app = express();
 
@@ -33,6 +35,8 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/courses", courseRoutes);
+app.use("/api/modules", moduleRoutes);
+app.use("/api/lessons", lessonRoutes);
 
 // 404 & Error Handling Middlewares
 app.use(notFoundMiddleware);

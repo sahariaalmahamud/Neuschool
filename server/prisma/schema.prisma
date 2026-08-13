@@ -28,6 +28,11 @@ enum CourseStatus {
   ARCHIVED
 }
 
+enum LessonType {
+  VIDEO
+  TEXT
+}
+
 model User {
   id           String       @id @default(uuid())
   name         String
@@ -36,6 +41,7 @@ model User {
   role         Role         @default(STUDENT)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+  courses      Course[]     @relation("InstructorCourses")
   reviews      Review[]
   enrollments  Enrollment[]
 
@@ -65,17 +71,57 @@ model Course {
   level            CourseLevel  @default(BEGINNER)
   status           CourseStatus @default(DRAFT)
   categoryId       String
+  instructorId     String
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 
   category    Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  instructor  User         @relation("InstructorCourses", fields: [instructorId], references: [id], onDelete: Cascade)
+  modules     Module[]
   reviews     Review[]
   enrollments Enrollment[]
 
   @@index([categoryId])
+  @@index([instructorId])
   @@index([status])
   @@index([level])
   @@map("courses")
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  title       String
+  description String?  @db.Text
+  order       Int      @default(1)
+  courseId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@index([courseId])
+  @@index([order])
+  @@map("modules")
+}
+
+model Lesson {
+  id          String     @id @default(uuid())
+  title       String
+  description String?    @db.Text
+  type        LessonType @default(TEXT)
+  content     String?    @db.Text
+  videoUrl    String?
+  order       Int        @default(1)
+  moduleId    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@index([moduleId])
+  @@index([order])
+  @@map("lessons")
 }
 
 model Review {
