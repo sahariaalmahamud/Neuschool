@@ -2,11 +2,9 @@
 
 import { useState, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   FiPlus,
   FiBookOpen,
-  FiEdit,
   FiLayers,
   FiAlertCircle,
   FiCheckCircle,
@@ -18,7 +16,6 @@ import { api, ApiError } from "@/lib/api";
 import type { ManageableCourse, CourseStatus } from "@/types/api";
 
 function InstructorDashboardContent() {
-  const router = useRouter();
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   const [courses, setCourses] = useState<ManageableCourse[]>([]);
