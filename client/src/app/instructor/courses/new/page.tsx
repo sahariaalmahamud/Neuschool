@@ -7,14 +7,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   FiArrowLeft,
-  FiBookOpen,
   FiAlertCircle,
-  FiCheckCircle,
   FiLock,
 } from "react-icons/fi";
 import { useAuth } from "@/context/AuthContext";
 import { api, ApiError } from "@/lib/api";
-import type { Category, CourseLevel, ManageableCourse } from "@/types/api";
+import type { Category, ManageableCourse } from "@/types/api";
 
 const createCourseSchema = z.object({
   title: z.string().trim().min(3, "Title must be at least 3 characters long"),
@@ -99,13 +97,8 @@ function CreateCourseContent() {
   const onSubmit = async (values: CreateCourseFormValues) => {
     setServerError(null);
 
-    const validationResult = createCourseSchema.safeParse(values);
-    if (!validationResult.success) {
-      return;
-    }
-
     try {
-      const res = await api.post<ManageableCourse>("/courses/manage", validationResult.data);
+      const res = await api.post<ManageableCourse>("/courses/manage", values);
       if (res.data && res.data.id) {
         router.push(`/instructor/courses/${res.data.id}`);
       } else {
@@ -193,7 +186,13 @@ function CreateCourseContent() {
               id="title"
               type="text"
               placeholder="e.g., Advanced React Server Components & Next.js"
-              {...register("title", { required: "Title is required" })}
+              {...register("title", {
+                required: "Title is required",
+                minLength: {
+                  value: 3,
+                  message: "Title must be at least 3 characters long",
+                },
+              })}
               className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-text-primary text-sm font-sans placeholder:text-text-muted focus:border-accent focus:outline-none transition-subtle"
             />
             {errors.title && (
@@ -214,6 +213,14 @@ function CreateCourseContent() {
               placeholder="advanced-react-server-components"
               {...register("slug", {
                 required: "URL Slug is required",
+                pattern: {
+                  value: /^[a-z0-9-]+$/,
+                  message: "Slug must contain only lowercase letters, numbers, and hyphens",
+                },
+                minLength: {
+                  value: 3,
+                  message: "Slug must be at least 3 characters long",
+                },
                 onChange: () => setIsSlugManuallyEdited(true),
               })}
               className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-text-primary text-sm font-sans placeholder:text-text-muted focus:border-accent focus:outline-none transition-subtle"
@@ -251,7 +258,13 @@ function CreateCourseContent() {
               id="description"
               rows={5}
               placeholder="Detailed explanation of what students will learn in this course..."
-              {...register("description", { required: "Full description is required" })}
+              {...register("description", {
+                required: "Full description is required",
+                minLength: {
+                  value: 10,
+                  message: "Description must be at least 10 characters long",
+                },
+              })}
               className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-text-primary text-sm font-sans placeholder:text-text-muted focus:border-accent focus:outline-none transition-subtle resize-y"
             />
             {errors.description && (
@@ -279,6 +292,11 @@ function CreateCourseContent() {
                   </option>
                 ))}
               </select>
+              {errors.categoryId && (
+                <p className="mt-1 text-xs text-red-600 dark:text-red-400 font-sans">
+                  {errors.categoryId.message}
+                </p>
+              )}
             </div>
 
             {/* Level */}
@@ -309,9 +327,20 @@ function CreateCourseContent() {
                 step="0.01"
                 min="0"
                 placeholder="0.00"
-                {...register("price", { valueAsNumber: true })}
+                {...register("price", {
+                  valueAsNumber: true,
+                  min: {
+                    value: 0,
+                    message: "Price cannot be negative",
+                  },
+                })}
                 className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-text-primary text-sm font-sans placeholder:text-text-muted focus:border-accent focus:outline-none transition-subtle"
               />
+              {errors.price && (
+                <p className="mt-1 text-xs text-red-600 dark:text-red-400 font-sans">
+                  {errors.price.message}
+                </p>
+              )}
             </div>
           </div>
 
