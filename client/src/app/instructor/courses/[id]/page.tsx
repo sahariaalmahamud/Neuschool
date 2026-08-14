@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, use, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import {
   FiArrowLeft,
@@ -13,7 +12,6 @@ import {
   FiCheckCircle,
   FiAlertCircle,
   FiLock,
-  FiChevronDown,
   FiSave,
 } from "react-icons/fi";
 import { useAuth } from "@/context/AuthContext";
@@ -30,7 +28,6 @@ interface EditCoursePageProps {
 }
 
 function CourseEditorContent({ courseId }: { courseId: string }) {
-  const router = useRouter();
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   const [course, setCourse] = useState<ManageableCourse | null>(null);
@@ -131,7 +128,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
     }
   };
 
-  // Add Module
+  // Add Module with max-order calculation
   const handleAddModule = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!moduleTitle.trim()) return;
@@ -139,11 +136,14 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
     setIsSubmittingModule(true);
     setError(null);
 
+    const existingOrders = course?.modules?.map((m) => m.order || 0) || [0];
+    const nextOrder = Math.max(0, ...existingOrders) + 1;
+
     try {
       await api.post(`/courses/${courseId}/modules`, {
         title: moduleTitle.trim(),
         description: moduleDesc.trim() || undefined,
-        order: (course?.modules?.length || 0) + 1,
+        order: nextOrder,
       });
 
       setModuleTitle("");
@@ -157,9 +157,8 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
       } else {
         setError("A network error occurred.");
       }
-    } finally {
-      setIsSubmittingModule(false);
     }
+    setIsSubmittingModule(false);
   };
 
   // Delete Module
@@ -180,13 +179,17 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
     }
   };
 
-  // Add Lesson
+  // Add Lesson with max-order calculation
   const handleAddLesson = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!activeModuleForLesson || !lessonTitle.trim()) return;
 
     setIsSubmittingLesson(true);
     setError(null);
+
+    const targetModule = course?.modules?.find((m) => m.id === activeModuleForLesson);
+    const existingLessonOrders = targetModule?.lessons?.map((l) => l.order || 0) || [0];
+    const nextLessonOrder = Math.max(0, ...existingLessonOrders) + 1;
 
     try {
       await api.post(`/modules/${activeModuleForLesson}/lessons`, {
@@ -195,6 +198,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
         type: lessonType,
         content: lessonContent.trim() || undefined,
         videoUrl: lessonVideoUrl.trim() || undefined,
+        order: nextLessonOrder,
       });
 
       setLessonTitle("");
@@ -326,7 +330,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
         {/* SECTION 1: GENERAL COURSE DETAILS */}
         <section className="rounded-xl border border-border bg-surface p-6 sm:p-8 shadow-sm">
           <h2 className="font-serif text-xl font-medium text-text-primary mb-6">
-            Course Settings & Projections
+            Course Settings
           </h2>
 
           <form onSubmit={handleSubmit(onUpdateCourse)} className="space-y-6">
