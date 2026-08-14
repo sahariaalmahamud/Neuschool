@@ -8,6 +8,7 @@ import {
   FiChevronDown,
   FiArrowRight,
   FiCheckCircle,
+  FiPlayCircle,
 } from "react-icons/fi";
 import { api, ApiError } from "@/lib/api";
 import type { PublicCourseDetail } from "@/types/api";
@@ -110,15 +111,20 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
             <div className="space-y-3 pt-2">
               <Link
-                href={`/login?redirect=/courses/${course.slug}`}
+                href={`/learn/${course.slug}`}
                 className="w-full py-3 px-4 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium font-sans transition-subtle shadow-sm flex items-center justify-center gap-2 text-center"
               >
-                <span>Enroll in Course</span>
-                <FiArrowRight className="w-4 h-4" />
+                <FiPlayCircle className="w-4 h-4" />
+                <span>Start Learning Workspace</span>
               </Link>
-              <p className="text-center text-xs font-sans text-text-muted">
-                Sign in or register to access full learning content.
-              </p>
+
+              <Link
+                href={`/login?redirect=/courses/${course.slug}`}
+                className="w-full py-2.5 px-4 rounded-lg border border-border bg-background hover:bg-surface text-text-primary text-xs font-medium font-sans transition-subtle flex items-center justify-center gap-1.5 text-center"
+              >
+                <span>Enroll Options</span>
+                <FiArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
 
             <div className="pt-6 border-t border-border space-y-3 text-xs font-sans text-text-muted">
