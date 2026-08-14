@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
+import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -33,9 +34,11 @@ export default function RootLayout({
       className={`${sansFont.variable} ${serifFont.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-text-primary font-sans">
-        <Navbar />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

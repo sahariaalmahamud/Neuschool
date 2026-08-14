@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { FiSearch, FiX } from "react-icons/fi";
+import { FiSearch, FiX, FiLogOut, FiUser } from "react-icons/fi";
+import { useAuth } from "@/context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
 
 interface MobileMenuProps {
@@ -12,6 +13,8 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose, onOpenSearch }: MobileMenuProps) {
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -98,20 +101,57 @@ export default function MobileMenu({ isOpen, onClose, onOpenSearch }: MobileMenu
         </div>
 
         <div className="pt-6 border-t border-border flex flex-col gap-3">
-          <Link
-            href="/login"
-            onClick={onClose}
-            className="w-full py-3 text-center rounded-md border border-border bg-surface text-text-primary font-sans text-sm font-medium hover:border-border-hover transition-subtle"
-          >
-            Log In
-          </Link>
-          <Link
-            href="/register"
-            onClick={onClose}
-            className="w-full py-3 text-center rounded-md bg-accent hover:bg-accent-hover text-white font-sans text-sm font-medium transition-subtle shadow-sm"
-          >
-            Register
-          </Link>
+          {isLoading ? (
+            <div className="w-full h-12 rounded-md bg-surface-subtle animate-pulse" />
+          ) : isAuthenticated && user ? (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-surface">
+                <div className="flex items-center gap-2.5 truncate">
+                  <FiUser className="w-4 h-4 text-accent shrink-0" />
+                  <div className="truncate">
+                    <div className="text-sm font-semibold text-text-primary truncate">
+                      {user.name}
+                    </div>
+                    <div className="text-xs text-text-muted truncate">
+                      {user.email}
+                    </div>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-surface-subtle text-accent uppercase shrink-0">
+                  {user.role}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  onClose();
+                }}
+                className="w-full py-3 flex items-center justify-center gap-2 rounded-md border border-border bg-surface text-text-primary font-sans text-sm font-medium hover:border-border-hover transition-subtle cursor-pointer"
+              >
+                <FiLogOut className="w-4 h-4 text-accent" />
+                <span>Log Out</span>
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                onClick={onClose}
+                className="w-full py-3 text-center rounded-md border border-border bg-surface text-text-primary font-sans text-sm font-medium hover:border-border-hover transition-subtle"
+              >
+                Log In
+              </Link>
+              <Link
+                href="/register"
+                onClick={onClose}
+                className="w-full py-3 text-center rounded-md bg-accent hover:bg-accent-hover text-white font-sans text-sm font-medium transition-subtle shadow-sm"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiSearch, FiMenu } from "react-icons/fi";
+import { FiSearch, FiMenu, FiLogOut, FiUser } from "react-icons/fi";
+import { useAuth } from "@/context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
 import SearchModal from "./SearchModal";
 import MobileMenu from "./MobileMenu";
@@ -10,6 +11,7 @@ import MobileMenu from "./MobileMenu";
 export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -74,20 +76,47 @@ export default function Navbar() {
             {/* Theme Toggle */}
             <ThemeToggle />
 
-            {/* Desktop Auth CTAs */}
-            <div className="hidden md:flex items-center gap-2">
-              <Link
-                href="/login"
-                className="px-3.5 py-1.5 text-sm font-medium font-sans text-text-primary hover:text-accent transition-fast rounded-md"
-              >
-                Log In
-              </Link>
-              <Link
-                href="/register"
-                className="px-4 py-1.5 text-sm font-medium font-sans bg-accent hover:bg-accent-hover text-white rounded-md transition-subtle shadow-sm"
-              >
-                Register
-              </Link>
+            {/* Desktop Auth Section */}
+            <div className="hidden md:flex items-center gap-3 min-w-[140px] justify-end">
+              {isLoading ? (
+                <div className="w-24 h-8 rounded-md bg-surface-subtle animate-pulse" />
+              ) : isAuthenticated && user ? (
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 px-2.5 py-1 rounded-md border border-border bg-surface text-xs font-sans">
+                    <FiUser className="w-3.5 h-3.5 text-accent" />
+                    <span className="font-medium text-text-primary max-w-[120px] truncate">
+                      {user.name}
+                    </span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-surface-subtle text-accent uppercase">
+                      {user.role}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-text-muted hover:text-text-primary transition-fast rounded-md border border-border hover:border-border-hover cursor-pointer"
+                  >
+                    <FiLogOut className="w-3.5 h-3.5" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="px-3.5 py-1.5 text-sm font-medium font-sans text-text-primary hover:text-accent transition-fast rounded-md"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-4 py-1.5 text-sm font-medium font-sans bg-accent hover:bg-accent-hover text-white rounded-md transition-subtle shadow-sm"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Hamburger Toggle */}
