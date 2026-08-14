@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiSearch, FiMenu, FiLogOut, FiUser } from "react-icons/fi";
+import { FiSearch, FiMenu, FiLogOut, FiUser, FiShield, FiLayers } from "react-icons/fi";
 import { useAuth } from "@/context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
 import SearchModal from "./SearchModal";
@@ -82,6 +82,26 @@ export default function Navbar() {
                 <div className="w-24 h-8 rounded-md bg-surface-subtle animate-pulse" />
               ) : isAuthenticated && user ? (
                 <div className="flex items-center gap-3">
+                  {user.role === "ADMIN" && (
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium font-sans border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 hover:border-red-300 rounded-md transition-fast"
+                    >
+                      <FiShield className="w-3.5 h-3.5" />
+                      <span>Admin</span>
+                    </Link>
+                  )}
+
+                  {(user.role === "INSTRUCTOR" || user.role === "ADMIN") && (
+                    <Link
+                      href="/instructor"
+                      className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium font-sans border border-border bg-surface text-text-primary hover:border-border-hover rounded-md transition-fast"
+                    >
+                      <FiLayers className="w-3.5 h-3.5 text-accent" />
+                      <span>Studio</span>
+                    </Link>
+                  )}
+
                   <div className="flex items-center gap-2 px-2.5 py-1 rounded-md border border-border bg-surface text-xs font-sans">
                     <FiUser className="w-3.5 h-3.5 text-accent" />
                     <span className="font-medium text-text-primary max-w-[120px] truncate">

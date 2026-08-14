@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { FiSearch, FiX, FiLogOut, FiUser } from "react-icons/fi";
+import { FiSearch, FiX, FiLogOut, FiUser, FiShield, FiLayers } from "react-icons/fi";
 import { useAuth } from "@/context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
 
@@ -121,6 +121,28 @@ export default function MobileMenu({ isOpen, onClose, onOpenSearch }: MobileMenu
                   {user.role}
                 </span>
               </div>
+
+              {user.role === "ADMIN" && (
+                <Link
+                  href="/admin"
+                  onClick={onClose}
+                  className="w-full py-2.5 flex items-center justify-center gap-2 rounded-md border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 font-sans text-sm font-medium"
+                >
+                  <FiShield className="w-4 h-4" />
+                  <span>Admin Dashboard</span>
+                </Link>
+              )}
+
+              {(user.role === "INSTRUCTOR" || user.role === "ADMIN") && (
+                <Link
+                  href="/instructor"
+                  onClick={onClose}
+                  className="w-full py-2.5 flex items-center justify-center gap-2 rounded-md border border-border bg-surface text-text-primary font-sans text-sm font-medium"
+                >
+                  <FiLayers className="w-4 h-4 text-accent" />
+                  <span>Instructor Studio</span>
+                </Link>
+              )}
 
               <button
                 type="button"
